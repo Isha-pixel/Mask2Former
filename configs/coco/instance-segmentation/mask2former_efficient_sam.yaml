@@ -1,0 +1,31 @@
+_BASE_: "mask2former_R50_bs16_50ep.yaml"
+
+MODEL:
+  BACKBONE:
+    NAME: "build_efficient_sam_backbone"   # Our custom function from efficient_sam_backbone.py
+  EFFICIENTSAM:
+    VARIANT: "vits"  # or "vitt"
+
+  # If needed, ensure these are set for instance segmentation
+  MASK_FORMER:
+    TEST:
+      SEMANTIC_ON: False
+      INSTANCE_ON: True
+      PANOPTIC_ON: False
+
+# Possibly override other hyperparams:
+SOLVER:
+  IMS_PER_BATCH: 16
+  BASE_LR: 0.0002
+  MAX_ITER: 45000  # e.g. 45k steps for instance segmentation
+
+DATASETS:
+  TRAIN: ("coco_2017_train",)
+  TEST: ("coco_2017_val",)
+
+# etc. for input resizing, etc.
+INPUT:
+  MIN_SIZE_TRAIN: 800
+  MAX_SIZE_TRAIN: 1333
+  MIN_SIZE_TEST: 800
+  MAX_SIZE_TEST: 1333
